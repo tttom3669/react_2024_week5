@@ -114,11 +114,16 @@ function App() {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm({
     mode: 'onTouched',
   });
   const onSubmit = async (data) => {
+    if (cartsData.carts.length <= 0) {
+      alert('購物車中未有產品');
+      return;
+    }
     const { name, email, tel, address, message } = data;
     try {
       setIsLoading(true);
@@ -136,6 +141,7 @@ function App() {
       getCarts();
       closeModal();
       alert(res.data.message);
+      reset();
     } catch (error) {
       alert(error.response.data.message);
       console.log(error);
@@ -426,6 +432,10 @@ function App() {
                   pattern: {
                     value: /^(0[2-8]\d{7}|09\d{8})$/,
                     message: '電話格式不正確',
+                  },
+                  minLength: {
+                    value: 8,
+                    message: '電話不少於 8 碼',
                   },
                 })}
               />
